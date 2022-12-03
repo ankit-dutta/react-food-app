@@ -50,7 +50,44 @@
     font-size: 20px;
     letter-spacing: 1.5px;
     color:black;
-    border-bottom: 3px solid gray;
+    /* border-bottom: 3px solid gray; */
     margin-bottom: 20px;
     
+    
   }
+  hr{
+  border: 1px solid gray;
+  }
+
+  .itemlistcontainer{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .addbtn{
+    background-color: #c28a12;
+    font-size: 19px;
+    width: 31px;
+    font-weight: bold;
+    border: 1px solid #c28a12 ;
+    
+  }
+  .addbtn:hover{
+    background-color: #8a2b06;
+    color: aliceblue;
+    cursor: pointer;
+  }
+
+
+  .removebtn{
+    font-size: 19px;
+    width: 31px;
+    font-weight: bold;
+    border: 1px solid gray
+  }
+  .removebtn:hover{
+    background-color: #141414;
+    color: rgb(242, 245, 248);
+    cursor: pointer;
+  }
+  
