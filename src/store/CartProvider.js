@@ -2,30 +2,29 @@ import react,{useState} from "react";
 import CartContext from "./CartContext"
 
 
-const CartProvider = (props) =>{
-
-    const [items , setItems] = useState([]);
-
-    const addItemHandler = (item) =>{
-        setItems([...items , item])
-            // cartContext.items.push(item);
-            console.log(cartContext + "inside cart context");
-
-    }
-
-    const removeItem = (id) =>{
-
-    }
-
+const CartProvider = (props) => {
+    const [items, updateItems] = useState([]);
+  
+    const addItemToCartHandler = (item) => {
+      updateItems([...items, item]);
+      console.log("inside additemtocarthandler", CartContext);
+    };
+  
+    const removeItemFromCartHandler = (id) => {
+      updateItems(items.filter((item) => item.id !==id));
+    };
+  
     const cartContext = {
-        items: items,
-        totalamount: 0,
-        addItem: addItemHandler ,
-        removeItem: removeItem
-    }
-
-   return <CartContext.Provider value = {cartContext}>
-       {props.children}
-   </CartContext.Provider>
-}
-export default CartProvider
+      items: items,
+      addItem: addItemToCartHandler,
+      removeItem: removeItemFromCartHandler,
+    };
+    return (
+      <CartContext.Provider value={cartContext}>
+        {console.log("inside cartContextProvider", CartContext)}
+        {props.children}
+      </CartContext.Provider>
+    );
+  };
+  
+  export default CartProvider;

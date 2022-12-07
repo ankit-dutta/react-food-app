@@ -5,109 +5,98 @@ import CartContext from '../../store/CartContext';
 
 
 const Cart = (props) =>{
-    const [quantity , setQuantity] = useState(1)
+  const [cartItem, setCartItem] = useState([]);
+  const [quantity, setQuantity] = useState(); 
 
-    const cartctx = useContext(CartContext)
-    // let updateItem = 0
-    const existingItems = [...cartctx.items];
-
-    let amt = 0;
-
-    cartctx.items.forEach(item =>{
-        amt += Number((item.price)*(item.quantity));
-    })
-   
-    const addmealqnty = (item) =>{
-       
-    //   console.log('item add', item)
-    //   console.log(item.quantity)
-      const itemIdx = existingItems.findIndex((i) => i.id === item.id);
-      console.log('item id',existingItems[itemIdx].quantity)
-      const updateitem = existingItems[itemIdx].quantity++;
-      setQuantity(updateitem);
-      console.log('updated',updateitem)
+  const cartcntx = useContext(CartContext);
+  const existingItems = [...cartcntx.items]
 
 
-    }
-   
-    const removemealqnty = (item) =>{
+  const cartItemDecrementHandler = (item) => {
+  //   cartcntx.removeItem(id);
+  //  setCartItem(cartItem => 
+  //     cartItem.map((item) => id === item.id ? {...item, quantity:item.quantity - 1}:item
+  //     )
+  //   );
 
-        const itemIdx = existingItems.findIndex((i)=>i.id===item.id);
-        console.log(itemIdx , 'itemidx')
+  const itemIdx = existingItems.findIndex((i) => i.id === item.id)
 
-        if(item.quantity < 0){
-            return;
-        }
-
-        if(item.quantity > 0){
-            const updateitem = existingItems[itemIdx].quantity--;
-            setQuantity(updateitem);
-        }
-
-       
-        if(existingItems[itemIdx].quantity === 0){
-            cartctx.removeItem(item);
-        }
-      }
-
-    let totalAmount = 0
-    const cartItem =( <ul className={classes['cart-items']}>{
-        
-   cartctx.items.map((item)=>(
-   
-    <li className={classes.upperlist} key={item.id} id = {item.id}>
-      
-          <div>
-            <h2>{item.name}</h2>
-          </div>
-
-        <div className={classes.itemlistcontainer}>
-         <div>
-            <span>
-                {`$${item.price}`}
-            </span>
-            <span> {`x${item.quantity}`}</span>
-         </div>
-
-         <div>
-           <button className={classes.addbtn} onClick={() => addmealqnty(item)} >+</button> &nbsp;
-           <button className={classes.removebtn} onClick={() => removemealqnty(item)} >-</button>
-         </div>
-       </div>
-       <hr></hr>
-
-
-        {/* Name: {item.name} || Price: {item.price} || Quantity: {item.quantity} 
-        <button>+</button>
-        <button>-</button> */}
-        </li>
-    
-    ))}
-    </ul>
-    );
-
-    //Adding total amount of items
-    cartctx.items.map((item)=>{
-        totalAmount = totalAmount + item.price
-        console.log(totalAmount)
-    })
-
-
-    return (
-    <Modal>
-        {cartItem}
-
-        <div className={classes.total}>
-            <span>Total Amount</span>
-            <span>{amt.toFixed(2)}</span>
-        </div>
-
-        <div className={classes.actions}>
-            <button className={classes['button--alt']} onClick = {props.onCloseCart}>close</button>
-            <button className='{classes.button'>Order</button>
-        </div>
-    </Modal>
-    )
+  if(item.quantity < 0){
+    return;
 }
+     if(item.quantity > 0){
+      const updatedList = existingItems[itemIdx].quantity--;
+      setQuantity(updatedList);
+     }
 
-export default Cart;
+     if(existingItems[itemIdx].quantity === 0){
+      cartcntx.removeItem(item.id);
+     }
+
+  };
+
+  const cartItemIncrementHandler = (item) => {
+    // setQuantity(qty);
+    // cartcntx.addItem(cartItems => 
+    //     cartItems.map((items) => id === items.id ? { quantity:items.quantity + 1}:items
+    //     )
+    // );  
+
+      const itemIdx = existingItems.findIndex((i) => i.id === item.id)
+      const updatedList = existingItems[itemIdx].quantity++;
+      setQuantity(updatedList)
+
+
+    // setCartItem(cartItems => 
+    //   cartItems.map((items) => id === items.id ? {...items, quantity:items.quantity + 1}:items
+    //   )
+    // );
+  };
+    // let totalAmount = 0
+    const cartItems = (
+      <ul className={classes["cart-items"]}>
+        {cartcntx.items.map((item) => (
+          <li className={classes["cart-item"]}>
+            <div>
+              <h2>{item.name}</h2>
+              <div className={classes.summary}>
+                <span className={classes.price}>₹{item.price}</span>
+                <span className={classes.quantity}>x {item.quantity}</span>
+              </div>
+            </div>
+            <div className={classes.actions}>
+              <button onClick={() => cartItemDecrementHandler(item)}>-</button>
+              <button onClick={() => cartItemIncrementHandler(item)}>+</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
+  
+    let amt = 0;
+    cartcntx.items.forEach((item)=>{
+      amt += Number((item.price)*(item.quantity))
+    })
+  
+   
+  
+    return (
+      <Modal onClose={props.onCloseCart}>
+        {cartItems}
+        <div className={classes.total}>
+          <span>Total Amount</span>
+          <span>₹{amt.toFixed(2)}</span>
+        </div>
+        <div className={classes.actions}>
+          <button className={classes["button--alt"]} onClick={props.onCloseCart}>
+            Close
+          </button>
+          <button className={classes.button} onClick={props.onClose}>
+            Order
+          </button>
+        </div>
+      </Modal>
+    );
+  };
+  
+  export default Cart;
